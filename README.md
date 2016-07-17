@@ -28,3 +28,10 @@ Sólo recarga las celdas que aparecen en pantalla, entonces aunque tengamos infi
 están visualizando en el momento de la llamada a reloadData.
 
 
+## ¿Cómo harías para actualizar SimplePDFViewController cuando cambia el libro seleccionado de la tabla?
+
+
+Se ha implementado mediante una notificación que se envía cuando el usuario selecciona una celda de la tabla,
+
+
+
