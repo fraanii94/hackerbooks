@@ -30,6 +30,8 @@ class Book : Comparable{
     
     let nc = NSNotificationCenter.defaultCenter()
     
+    
+    //MARK: Initializers
     init(title : String,authors :[String],tags :[String],imageURL : NSURL,pdfURL : NSURL) {
    
         self.title = title
@@ -40,7 +42,7 @@ class Book : Comparable{
         self.isFavorite = false
 
     }
-    
+    //MARK:Notification BookDidChange
     func sendNotification(){
         
         let notification = NSNotification(name: BookDidChange, object: nil, userInfo: ["book": self])

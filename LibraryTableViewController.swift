@@ -12,19 +12,21 @@ class LibraryTableViewController: UITableViewController {
     
     var model : Library
     var delegate:LibraryTableViewControllerDelegate?
-    var favs = [Bool]?()
+
+    
+    //MARK: Initializers
+    
     init(library : Library){
         
         self.model = library
-        
         super.init(nibName: nil, bundle: nil)
-        
-        favs = NSUserDefaults.standardUserDefaults().arrayForKey("favorites") as? [Bool]
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK:Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,17 +37,10 @@ class LibraryTableViewController: UITableViewController {
         nc.addObserver(self, selector: #selector(updateUserDefaults), name: UserDidFav, object: nil)
         
         self.title = model.title
-        
 
-    }
-  
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-       
     }
     
-
+    //MARK:Favorites
     
     func updateUserDefaults(notification : NSNotification){
         
@@ -57,9 +52,9 @@ class LibraryTableViewController: UITableViewController {
             }
         }
         var favs = NSUserDefaults.standardUserDefaults().arrayForKey("favorites") as! [String]
+        
         if newBook.isFavorite == true{
             model.tags["favorites"]?.append(newBook)
-            
             favs.append(newBook.title)
             NSUserDefaults.standardUserDefaults().setValue(favs, forKey: "favorites")
         }else{
@@ -79,19 +74,16 @@ class LibraryTableViewController: UITableViewController {
         
         tableView.reloadData()
         
-        
-       
     }
 
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
+        
         return model.tags.count
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         
         if let section = model.tags[keyforSection(section)]{
             return section.count
@@ -105,21 +97,20 @@ class LibraryTableViewController: UITableViewController {
         
         let cell : BookTableViewCell = self.tableView.dequeueReusableCellWithIdentifier("bookCell") as! BookTableViewCell
         
+        let book : Book  = (model.booksForTag(keyforSection(indexPath.section))?[indexPath.row])!
         
-
-        cell.titleLabel.text = model.booksForTag(keyforSection(indexPath.section))?[indexPath.row].title
+        cell.titleLabel.text = book.title
         
-        cell.authors.text = model.booksForTag(keyforSection(indexPath.section))?[indexPath.row].authors.joinWithSeparator(",")
+        cell.authors.text = book.authors.joinWithSeparator(",")
         
-        let imageURL = model.booksForTag(keyforSection(indexPath.section))?[indexPath.row].imageURL
+        let imageURL = book.imageURL
         
-        cell.coverImage.image = UIImage(data: NSData(contentsOfURL: imageURL!)!)
+        cell.coverImage.image = UIImage(data: NSData(contentsOfURL: imageURL)!)
         
 
         return cell
         
     }
-    
     
     
     override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -135,6 +126,7 @@ class LibraryTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
         return keyforSection(section).uppercaseString
     }
     
@@ -151,6 +143,7 @@ class LibraryTableViewController: UITableViewController {
         
         return section[index]
     }
+    //MARK: TableView Delegate
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         let book = model.booksForTag(keyforSection(indexPath.section))?[indexPath.row]

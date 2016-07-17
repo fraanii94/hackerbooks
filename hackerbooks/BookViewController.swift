@@ -30,10 +30,15 @@ class BookViewController: UIViewController,UISplitViewControllerDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bookImageView.layer.cornerRadius = bookImageView.frame.width/4
+        bookImageView.clipsToBounds = true
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         edgesForExtendedLayout = .None
-        print(model?.imageURL)
         updateViews()
     }
     
@@ -41,12 +46,11 @@ class BookViewController: UIViewController,UISplitViewControllerDelegate {
     func updateViews(){
         
         bookImageView.image = UIImage(data: NSData(contentsOfURL: (model?.imageURL)!)!)
-        bookImageView.layer.cornerRadius = bookImageView.frame.width/4
-        bookImageView.clipsToBounds = true
         title = self.model?.title
         authorsLabel.text = "Authors: " + (model?.authors.joinWithSeparator(", "))!
         tagsLabel.text = "Tags: " + (model?.tags.joinWithSeparator(", "))!
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
+        
         if(model?.isFavorite == true){
             favImage.image = UIImage(named: "star_PNG1592")
             favButton.setTitle("Desmarcar como favorito", forState: .Normal)

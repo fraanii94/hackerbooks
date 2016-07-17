@@ -70,19 +70,21 @@ func constructJSON() -> JSONArray?{
     let userDefaults = NSUserDefaults.standardUserDefaults()
     if !userDefaults.boolForKey("alreadyLoaded") {
         
+        if let jsonData = downloadBooks()?.dataUsingEncoding(NSUTF8StringEncoding),
+            maybeArray = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as? JSONArray{
+            userDefaults.setBool(true, forKey: "alreadyLoaded")
+            return maybeArray
+        }
+        
+    }else {
+        
         if let jsonData = readFromLocal()?.dataUsingEncoding(NSUTF8StringEncoding),
             maybeArray = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as? JSONArray{
             
             return maybeArray
         }
-        userDefaults.setBool(true, forKey: "alreadyLoaded")
         
-    }else {
-        if let jsonData = downloadBooks()?.dataUsingEncoding(NSUTF8StringEncoding),
-            maybeArray = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as? JSONArray{
-            
-            return maybeArray
-        }
+
     }
     return JSONArray()
 }

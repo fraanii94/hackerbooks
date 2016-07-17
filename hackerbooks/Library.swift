@@ -11,18 +11,15 @@ import Foundation
 class Library{
     
     var title : String
-    
     var books: [Book]?
-    
     var tags: [String : [Book]] = [String : [Book]]()
-    
     var booksCount: Int{
         get{
             let count : Int = self.books == nil ? 0 : self.books!.count
             return count
         }
     }
-    
+    //MARK: Initializers
     init(title:String,books: [Book]) {
         
         
@@ -62,7 +59,7 @@ class Library{
         self.init(title: "HackerBooks",books:books)
     
     }
-    
+    //MARK: Utils
     func bookCountForTag (tag : String?) -> Int{
         
         var count = 0
